@@ -56,7 +56,7 @@ const { adminLoginApi } = require('./apis/admin/login')
 
 // Create Express app
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Connect to database
 connectDB();
@@ -109,7 +109,7 @@ app.post("/admin/manageareaapi", ManageAreaApi);
 app.post('/admin/admindata', AdmindataApi)
 app.post('/admin/deletearea', DeleteArea);
 app.post('/admin/updatearea', UpdateAreaApi);
-app.post('/admin/booking', BookingApi);
+app.get('/admin/booking', BookingApi);
 app.post('/admin/totaldevice', TotaldeviceDataApi);
 app.post('/admin/getPendingCardRequest', GetPendingCardRequest);
 app.post('/admin/userdata', UserDataApi);
@@ -121,6 +121,12 @@ app.post('/admin/deleteuser', DeleteUser);
 app.post('/admin/forgotpassword', sendEmailWithSMTP);
 app.post('/admin/adminlogout',AdminLogoutApi)
 app.post('/admin/deleterfidrequest', DeleteRfidRequestApi);
+
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // Start the server
 app.listen(port, () => console.log(`Server listening on port ${port}`));
