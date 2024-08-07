@@ -1,5 +1,5 @@
 // Import required modules
-const connectDB = require("./db/dbconnect");
+const connectDB = require("./db/dbConnect");
 const express = require('express');
 const cors = require("cors");
 const session = require("express-session");
@@ -67,7 +67,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // CORS configuration
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin:"*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"]
 }));
