@@ -9,10 +9,8 @@ async function connectDB(){
         const database = client.db("sps");
         return database;
 
-
     } catch (error) {
         console.log(error);
     }
 }
-// connectToMongodb();
 module.exports = connectDB; 
