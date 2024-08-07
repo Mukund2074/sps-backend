@@ -1,7 +1,5 @@
-const connectDB = require('../../db/dbConnect')
-
 async function AdminLogoutApi(req, res) {
-    const sessions = req.session.user;
+    const sessions = req.session.admin;
     if (!sessions) {
         return res.status(401).json({ message: "Already Logged Out" });
     } else {
@@ -18,7 +16,9 @@ async function AdminLogoutApi(req, res) {
         } catch (error) {
             return res.status(500).json({ error: error.message });
         }
+       
     }
+
 }
 
 module.exports = {AdminLogoutApi}

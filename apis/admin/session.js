@@ -1,18 +1,18 @@
-async function AdminSession(req , res){
+async function AdminSession(req, res) {
     try {
-        const userData = req.session.user;
 
-        if(!userData){
-            return res.status(401).json({message:"No Session Created ! "});
-        }
-        else{
-             res.status(200).json({sessionData : userData, sussess:true, message:'Got it Successfully'});
-             console.log(userData); 
+        const adminDatas = req.session.admin;
+
+        if (!adminDatas) {
+            return res.status(401).json({ message: "No sesssion created!" });
+        } else {
+            res.status(200)
+                .json({ sessionData: adminDatas, success: true, message: "session got Successful" });
+
         }
     } catch (error) {
-        console.log("error");
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 }
 
-module.exports = {AdminSession};
+module.exports = {AdminSession}

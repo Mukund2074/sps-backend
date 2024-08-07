@@ -1,23 +1,30 @@
-const connectDB = require('../../db/dbConnect');
+const connectDB = require("../../db/dbConnect");
 
-async function AdminLoginApi(req, res) {
+async function adminLoginApi(req, res) {
     try {
         const db = await connectDB();
-        const collection = db.collection('admindata');
-        const { email, password } = req.body;
-        const user = await collection.findOne({ email, password });
+        const collection = db.collection("admindata");
 
-        if (!user) {
-            return res.status(401).json({ success: false, message: "Invalid username or password" });
-        } else {
-            req.session.user = { session: user, isAuth: true };
-            const userDatas = req.session.user;
-            res.status(200).json({ userData: userDatas, success: true, message: "LOGIN SUCCESSFULLY" });
+        const { email, password, role } = req.body;
+        const admin = await collection.findOne({ email, password });
+
+        if (!admin) {
+            return res
+                .status(401)
+                .json({ success: false, message: "Invalid adminname or password" });
         }
-    } catch (err) {
+
+        // session creation
+        req.session.admin = { session: admin, isAuth: true };
+        const adminDatas = req.session.admin;
+
+        res
+            .status(200)
+            .json({ adminData: adminDatas, success: true, message: "Login Successful" });
+    } catch (error) {
+        console.log("login.js error: ", error);
         res.status(500).json({ success: false, error: "Login Failed" });
     }
 }
 
-module.exports = { AdminLoginApi };
- 
+module.exports = { adminLoginApi };
