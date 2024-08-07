@@ -49,12 +49,6 @@ const { GetOnlineBooking } = require('./apis/user/getOnlineBookingApi');
 const { DeleteRfidRequestApi } = require('./apis/admin/DeleteRfidRequestApi');
 
 
-
-
-
-
-
-// Create Express app
 const app = express();
 const port = process.env.PORT || 8000;
 
@@ -67,9 +61,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // CORS configuration
 app.use(cors({
-    origin:"*",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"]
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 
 // Configure express-session middleware
