@@ -55,7 +55,7 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-  origin: '*', // Allow all origins
+  origin: ['*', 'http://localhost:3000' , 'http://localhost:3001'] , // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
