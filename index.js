@@ -56,7 +56,7 @@ const { DeleteRfidRequestApi } = require('./apis/admin/DeleteRfidRequestApi');
 
 // Create Express app
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Connect to database
 connectDB();
