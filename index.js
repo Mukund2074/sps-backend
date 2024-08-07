@@ -53,17 +53,23 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
 app.use(cors({
-  origin: ['*', 'http://localhost:3000' , 'http://localhost:3001'] , // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-}));
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://sps-backend.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
+  
+
+
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
-    saveUninitialized: true
-}));
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Set to `true` for HTTPS
+  }));
+  
 
 // Define API routes
 
