@@ -58,7 +58,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // CORS configuration
 app.use(cors({
-    origin: ["http://localhost:3000" , "https://localhost:3001"],
+    origin: ["http://localhost:3000", "https://localhost:3001"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"]
 }));
@@ -120,3 +120,8 @@ app.use((err, req, res, next) => {
 
 // Export the Express app
 module.exports = app;
+
+// Start the server (for local development only)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => console.log(`Server listening on port ${port}`));
+}
