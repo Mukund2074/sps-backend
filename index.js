@@ -42,7 +42,7 @@ const { GetComplaint } = require('./apis/admin/getComplaints');
 const { ApproveCardRequest } = require('./apis/admin/approveCardRequest');
 const { GetOnlineBooking } = require('./apis/user/getOnlineBookingApi');
 const { DeleteRfidRequestApi } = require('./apis/admin/DeleteRfidRequestApi');
-const { adminLoginApi } = require('./apis/admin/login')
+const { adminLoginApi } = require('./apis/admin/login');
 
 // Create Express app
 const app = express();
@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // CORS configuration
 app.use(cors({
-    origin: ["http://localhost:3000", "https://localhost:3001"],
+    origin: ["http://localhost:3000" , "https://localhost:3001"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"]
 }));
@@ -75,9 +75,9 @@ app.post('/addDevice', AddDevice);
 app.post('/addSensorData', AddSensorData);
 
 // User APIs
-app.post('/user/userlogin', UserLoginApi);
-app.post('/user/usersignup', UserSignUpApi);
-app.post('/user/usersession', UserSession);
+app.post('/user/userlogin',UserLoginApi);
+app.post('/user/usersignup',UserSignUpApi);
+app.post('/user/usersession',UserSession);
 app.post('/user/applyForCard', ApplyForCard);
 app.post('/user/getCardDetail', GetCardDetailUser);
 app.post('/user/payment', PaymentApi);
@@ -86,17 +86,17 @@ app.post('/user/addComplaint', AddComplaint);
 app.post('/user/addFeedback', AddFeedback);
 app.post('/user/bookOnlineSlot', BookOnlineSlot);
 app.post('/user/getCurruntRfidBooking', GetCurrentRfidBooking);
-app.get('/user/getonlinebooking', GetOnlineBooking);
+app.get('/user/getonlinebooking',GetOnlineBooking);
 app.get('/user/getAreas', GetAreas);
 app.post('/user/userlogout', UserLogout);
 
 // Admin APIs
-app.post('/admin/adminsignup', AdminSignupApi);
-app.post('/admin/adminlogin', adminLoginApi);
-app.post('/admin/adminsession', AdminSession);
+app.post('/admin/adminsignup',AdminSignupApi);
+app.post('/admin/adminlogin',adminLoginApi )
+app.post('/admin/adminsession',AdminSession);
 app.post("/admin/addslot", AddSlots);
 app.post("/admin/manageareaapi", ManageAreaApi);
-app.post('/admin/admindata', AdmindataApi);
+app.post('/admin/admindata', AdmindataApi)
 app.post('/admin/deletearea', DeleteArea);
 app.post('/admin/updatearea', UpdateAreaApi);
 app.get('/admin/booking', BookingApi);
@@ -109,7 +109,7 @@ app.post('/admin/approveCardRequest', ApproveCardRequest);
 app.post('/admin/deleteAdmin', DeleteAdmin);
 app.post('/admin/deleteuser', DeleteUser);
 app.post('/admin/forgotpassword', sendEmailWithSMTP);
-app.post('/admin/adminlogout', AdminLogoutApi);
+app.post('/admin/adminlogout',AdminLogoutApi)
 app.post('/admin/deleterfidrequest', DeleteRfidRequestApi);
 
 app.use((err, req, res, next) => {
@@ -117,9 +117,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-module.exports = app;
+// Start the server
+app.listen(port, () => console.log(`Server listening on port ${port}`));
 
-// Start the server for local development
-if (require.main === module) {
-    app.listen(port, () => console.log(`Server listening on port ${port}`));
-}
+module.exports = app;  // Ensure you export the app
