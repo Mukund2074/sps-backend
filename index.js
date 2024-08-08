@@ -1,4 +1,3 @@
-// Import required modules
 const connectDB = require("./db/dbConnect");
 const express = require('express');
 const cors = require("cors");
@@ -43,7 +42,7 @@ const { GetComplaint } = require('./apis/admin/getComplaints');
 const { ApproveCardRequest } = require('./apis/admin/approveCardRequest');
 const { GetOnlineBooking } = require('./apis/user/getOnlineBookingApi');
 const { DeleteRfidRequestApi } = require('./apis/admin/DeleteRfidRequestApi');
-const { adminLoginApi } = require('./apis/admin/login');
+const { adminLoginApi } = require('./apis/admin/login')
 
 // Create Express app
 const app = express();
@@ -118,10 +117,9 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-// Export the Express app
 module.exports = app;
 
-// Start the server (for local development only)
-if (process.env.NODE_ENV !== 'production') {
+// Start the server for local development
+if (require.main === module) {
     app.listen(port, () => console.log(`Server listening on port ${port}`));
 }
