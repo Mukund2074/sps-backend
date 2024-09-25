@@ -47,13 +47,11 @@ app.use(session({
 }));
 
 // Connect to database and start the server
-connectDB().then(() => {
+connectDB()
+
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
-}).catch((error) => {
-    console.error('Database connection error:', error);
-});
 
 // User routes with session
 app.post('/user/userlogin', UserLoginApi);
