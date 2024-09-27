@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken'); // Don't forget to import jwt
-const { AdminSignupApi } = require('./signup');
 const { adminLoginApi } = require('./login');
 const { AddSlots } = require('./Addslot');
 const { ManageAreaApi } = require('./ManageAreaApi');
@@ -23,8 +22,6 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// Public Routes
-router.post('/adminsignup', AdminSignupApi);
 router.post('/adminlogin', adminLoginApi);
 
 // Middleware for JWT authentication
