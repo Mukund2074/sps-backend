@@ -21,7 +21,7 @@ const { UserSignUpApi } = require('./apis/user/signup');
 const { UserSession } = require('./apis/user/session');
 const { PaymentApi } = require('./apis/user/PaymentApi');
 const { GetOnlineBooking } = require('./apis/user/getOnlineBookingApi');
-const { router } = require('./apis/admin/Auth'); // Admin routes
+const { router } = require('./apis/admin/auth'); // Admin routes
 
 // Create Express app
 const app = express();
