@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const connectDB = require("../../db/ConnectDB");
 
 async function GetAreas(req, res) {
@@ -11,7 +10,6 @@ async function GetAreas(req, res) {
         res.status(200).json({ areas, success: true, message: "Areas Data found Successfully" });
 
     } catch (error) {
-        console.log("GetAreas.js error: ", error);
         res.status(500).json({ success: false, error: "Something went wrong" });
     }
 }

@@ -18,6 +18,8 @@ const { DeleteUser } = require('./DeleteUserApi');
 const { sendEmailWithSMTP } = require('./forgotPasswordsmtp');
 const { DeleteRfidRequestApi } = require('./DeleteRfidRequestApi');
 const { getUserInfo } = require('./GetUserDetail');
+const { GetRfidStore } = require('./GetRfidStore');
+const { GetCardDetailsAdmin } = require('./GetCardDetailsAdmin');
 require('dotenv').config();
 
 const router = express.Router();
@@ -45,7 +47,7 @@ router.post('/addslot', AddSlots);
 router.get("/manageareaapi", ManageAreaApi); 
 router.get('/admindata', AdmindataApi);
 router.delete('/deletearea/:id', DeleteArea);
-router.put('/updatearea', UpdateAreaApi);
+router.put('/updatearea/:id', UpdateAreaApi);
 router.get('/booking', BookingApi);
 router.get('/totaldevice', TotaldeviceDataApi);
 router.get('/getPendingCardRequest', GetPendingCardRequest);
@@ -58,6 +60,8 @@ router.delete('/deleteuser/:id', DeleteUser);
 router.post('/forgotpassword', sendEmailWithSMTP);
 router.delete('/deleterfidrequest/:id', DeleteRfidRequestApi);
 router.get('/admininfo', getUserInfo);
+router.get('/rfidstore' , GetRfidStore);
+router.get('/getcardDetails/:id' , GetCardDetailsAdmin);
 
 // Default response
 router.get('/', (req, res) => {

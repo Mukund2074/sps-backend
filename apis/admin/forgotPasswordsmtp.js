@@ -169,7 +169,6 @@ async function sendEmailWithSMTP(req, res) {
         .replace("{{user_name}}", username),
     });
 
-    console.log("Message sent: %s", info.messageId);
     return res.status(200).json({ success: true, message: "Email Sent" });
   } catch (error) {
     console.error("Error sending email: ", error);

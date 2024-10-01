@@ -18,7 +18,6 @@ async function GetPendingCardRequest(req, res) {
             .status(200)
             .json({ cardRequests, success: true, message: "Request found Successfully" });
     } catch (error) {
-        console.log("GetPendingCardRequest.js error: ", error);
         res.status(500).json({ success: false, error: "something went wrong" });
     }
 }

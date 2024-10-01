@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const connectDB = require("../../db/ConnectDB");
 
 async function AddComplaint(req, res) {

@@ -12,7 +12,6 @@ async function UserSignUpApi(req, res) {
         }
 
         const userExist = await collection.findOne({ email });
-        console.log("UserExist:", userExist);
 
         if (userExist) {
             return res
@@ -24,7 +23,9 @@ async function UserSignUpApi(req, res) {
             name,
             email,
             phoneNo,
-            password
+            password,
+            hasCard: false,
+            timestamp: new Date()
         });
 
         return res
@@ -32,7 +33,6 @@ async function UserSignUpApi(req, res) {
             .json({ success: true, message: "Registration Successful" });
 
     } catch (error) {
-        console.error("signup.js error: ", error);
         return res.status(500).json({ success: false, error: "Registration Failed" });
     }
 }

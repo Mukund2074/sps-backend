@@ -1,55 +1,72 @@
-const { ObjectId } = require("mongodb");
-const connectDB = require("../../db/ConnectDB");
+const { ObjectId } = require('mongodb');
+const connectDB = require('../../db/ConnectDB');
 
 async function ApproveCardRequest(req, res) {
     try {
         const db = await connectDB();
-        const cardRequestsCollection = db.collection("cardRequests");
-        const rfidCardsCollection = db.collection("rfidCards");
+        const userCollection = db.collection('userdata');
+        const rfidStoreCollection = db.collection('rfidStore');
+        const cardRequestsCollection = db.collection('cardRequests');
+        const cardAllotmentsCollection = db.collection('cardAllotments');
 
-        // Extract necessary data from the request body
         const { requestId, cardNumber, balance } = req.body;
 
-        // Check if required fields are present
-        if (!cardNumber || !requestId) {
-            return res.status(400).json({ success: false, message: "Invalid request" });
-        }
+      
 
-        // Find the card request by requestId
-        const cardRequest = await cardRequestsCollection.findOne({ _id: new ObjectId(requestId), status: "Pending" });
-
+        // Step 1: Fetch the card request to get userId
+        const cardRequest = await cardRequestsCollection.findOne({ _id: new ObjectId(requestId) });
         if (!cardRequest) {
-            return res.status(404).json({ success: false, message: "Card request not found or already approved" });
+            return res.status(404).send('Card request not found');
         }
+ 
+        // Step 2: Fetch the user based on userId from the card request
+        const user = await userCollection.findOne({ _id: cardRequest.userId });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+   
 
-        // Assign the card to the user
-        const rfidCardData = {
-            userId: new ObjectId(cardRequest.userId),
-            email: cardRequest.email,
-            cardNumber,
-            // Add other fields you need from the card request
-            status: "Active", // Assuming the card is immediately active upon approval
-            timestamp: new Date(),
+        // Step 3: Fetch the RFID card
+        const rfidCard = await rfidStoreCollection.findOne({ id: cardNumber });
+        if (!rfidCard) {
+            return res.status(404).send('RFID card not found');
+        }
+    
+
+        // Create the allotment object
+        const allotment = {
+            userId: user._id,
+            rfidId: rfidCard._id,
             balance: parseInt(balance) || 200,
-
-
+            validity: rfidCard.validity,
+            assignedAt: new Date(),
         };
 
-        // Insert the card data into the RFID cards collection
-        const result = await rfidCardsCollection.insertOne(rfidCardData);
+        // Insert allotment and update collections
+        const allotmentResult = await cardAllotmentsCollection.insertOne(allotment);
 
-
-        // Update the status of the card request to "Approved"
+        await userCollection.updateOne(
+            { _id: user._id },
+            { $set: { hasCard: allotmentResult.insertedId } }
+        );
+        await rfidStoreCollection.updateOne(
+            { id: cardNumber },
+            { $set: { alloted: allotmentResult.insertedId } }
+        );
         await cardRequestsCollection.updateOne(
             { _id: new ObjectId(requestId) },
-            { $set: { status: "Approved" } }
+            {
+                $set: {
+                    status: 'alloted',
+                    allotmentId: allotmentResult.insertedId
+                }
+            }
         );
 
-        // Respond with success message
-        res.status(200).json({ success: true, message: "Card approved and assigned successfully" });
+        res.status(201).send({ success: true, message: 'Card alloted successfully' });
     } catch (error) {
-        console.log("ApproveCardRequest.js error: ", error);
-        res.status(500).json({ success: false, error: "Something went wrong" });
+        console.error(error);
+        res.status(500).send('Internal Server Error');
     }
 }
 

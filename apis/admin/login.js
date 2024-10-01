@@ -21,7 +21,6 @@ async function adminLoginApi(req, res) {
 
         res.status(200).json({ adminData: admin, token, success: true, message: "Login Successful" });
     } catch (error) {
-        console.log("login.js error: ", error);
         res.status(500).json({ success: false, error: "Login Failed" });
     }
 }

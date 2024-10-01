@@ -6,9 +6,7 @@ async function getUserInfo(req, res) {
         const db = await connectDB();
         const collection = db.collection("admindata");
 
-        // Access the decoded user ID from req.user
         const userId = req.user.id; // Use req.user set by authMiddleware
-        console.log("userId: ", userId);
         
 
         // Fetch the user information from the database

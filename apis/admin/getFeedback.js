@@ -17,7 +17,6 @@ async function GetFeedback(req, res) {
             .status(200)
             .json({ feedbacks, success: true, message: "feedbacks found Successfully" });
     } catch (error) {
-        console.log("GetFeedback.js error: ", error);
         res.status(500).json({ success: false, error: "something went wrong" });
     }
 }

@@ -1,4 +1,4 @@
-const connectDB = require("../../db/dbConnect");
+const connectDB = require("../../db/ConnectDB");
 const { ObjectId } = require("mongodb");
 
 async function BookOnlineApi(req, res) {
@@ -8,14 +8,7 @@ async function BookOnlineApi(req, res) {
         const onlineSlotBookingsCollection = db.collection('onlineSlotBookings');
         const staticCardCollection = db.collection('staticCard'); // Assuming the collection name is 'staticCard'
 
-        const { Name , Locality , Zipcode , availableOnlineSlot } = req.body;
-
-        const session = req.session.user;
-        if (!session) {
-            return res.status(401).json({ success: false, message: "Unauthorized Access" });
-        }
-
-        const userId = session.session._id;
+        const { userId, Name , Locality , Zipcode , availableOnlineSlot } = req.body;
 
         if (!Name || !Locality || !Zipcode || !availableOnlineSlot || !userId) {
             return res.status(400).json({ success: false, message: "Missing required fields!" });
@@ -42,37 +35,30 @@ async function BookOnlineApi(req, res) {
         let balanceDeduction = 0;
         if (bookingDurationInHours <= 1) {
             balanceDeduction = 10;
-        } else if (bookingDurationInHours <= 2) {
-            balanceDeduction = 20;
         } else {
-            balanceDeduction = 30;
+            balanceDeduction = bookingDurationInHours * 10;
         }
 
-        // Fetch balance from static card collection
         const userCard = await staticCardCollection.findOne({ userId: new ObjectId(userId) });
         if (!userCard) {
             return res.status(404).json({ success: false, message: "User's card details not found" });
         }
 
-        // Deduct balance
         const newBalance = userCard.balance - balanceDeduction;
         if (newBalance < 0) {
             return res.status(400).json({ success: false, message: "Insufficient balance" });
         }
 
-        // Update user's balance
         await staticCardCollection.updateOne(
             { userId: new ObjectId(userId) },
             { $set: { balance: newBalance } }
         );
 
-        // Update parking slot availability
         await parkingSlotsCollection.updateOne(
             { _id: new ObjectId(area) },
             { $set: { availableOnlineSlot: parkingSlot.availableOnlineSlot - 1 } }
         );
 
-        // Insert booking into database
         await onlineSlotBookingsCollection.insertOne({
             area: new ObjectId(area),
             userId: new ObjectId(userId),

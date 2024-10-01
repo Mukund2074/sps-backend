@@ -18,7 +18,6 @@ async function GetComplaint(req, res) {
             .json({ complaint, success: true, message: "complaint found Successfully" });
 
     } catch (error) {
-        console.log("GetComplaint.js error: ", error);
         res.status(500).json({ success: false, error: "something went wrong" });
     }
 }

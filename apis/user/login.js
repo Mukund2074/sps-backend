@@ -1,11 +1,12 @@
-const connectDB = require("../../db/ConnectDB");
 
+const jwt = require('jsonwebtoken'); 
+const  connectDB  = require('../../db/ConnectDB');
 async function UserLoginApi(req, res) {
     try {
         const db = await connectDB();
         const collection = db.collection("userdata");
 
-        const { email, password, role } = req.body;
+        const { email, password } = req.body;
         const user = await collection.findOne({ email, password });
 
         if (!user) {
@@ -14,15 +15,12 @@ async function UserLoginApi(req, res) {
                 .json({ success: false, message: "Invalid username or password" });
         }
 
-        // session creation
-        req.session.user = { session: user, isAuth: true };
-        const userDatas = req.session.user;
+        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
+            expiresIn: '1d',
+        });
 
-        res
-            .status(200)
-            .json({ userData: userDatas, success: true, message: "Login Successful" });
+        res.status(200).json({ userData: user, token, success: true, message: "Login Successful" });
     } catch (error) {
-        console.log("login.js error: ", error);
         res.status(500).json({ success: false, error: "Login Failed" });
     }
 }

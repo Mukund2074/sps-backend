@@ -6,16 +6,9 @@ async function ApplyForCard(req, res) {
         const db = await connectDB();
         const collection = db.collection('cardRequests');
 
-        const { name, email, phoneNo, address, aadhaarNo, vehicleNo } = req.body;
-
-        const session = req.session.user;
-        if (!session) {
-            return res.status(401).json({ success: false, message: "Unauthorized Access" });
-        }
-
-        const userId = session.session._id;
-
-        if (!name || !email || !phoneNo || !address || !aadhaarNo || !vehicleNo) {
+        const { userId , name, email, phoneNo, address } = req.body;
+        
+        if (!name || !email || !phoneNo || !address ) {
             return res.status(400).json({ success: false, message: "Missing required fields!" });
         }
 
@@ -24,22 +17,12 @@ async function ApplyForCard(req, res) {
             return res.status(401).json({ success: false, message: "Request already submitted" });
         }
 
-        const isVehicleExist = await collection.findOne({ vehicleNo });
-        const isAadhaarExist = await collection.findOne({ aadhaarNo });
-        if (isVehicleExist) {
-            return res.status(401).json({ success: false, message: "Vehicle already registered" });
-        }
-        if (isAadhaarExist) {
-            return res.status(401).json({ success: false, message: "Aadhaar already registered" });
-        }
 
         await collection.insertOne({
             name,
             email,
             phoneNo,
             address,
-            aadhaarNo,
-            vehicleNo,
             userId: new ObjectId(userId),
             status: "Pending",
             timestamp: new Date()
@@ -50,7 +33,7 @@ async function ApplyForCard(req, res) {
             .json({ success: true, message: "Request Submitted Successfully" });
 
     } catch (error) {
-        console.error("ApplyForCard.js error: ", error);
+        console.error("ApplyForCard error: ", error);
         return res.status(500).json({ success: false, error: "Something went wrong" });
     }
 }

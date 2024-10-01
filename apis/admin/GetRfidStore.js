@@ -1,17 +1,17 @@
 //const { ObjectId } = require("mongodb");
 const connectDB = require('../../db/ConnectDB');
 
-async function UserDataApi(req, res) {
+async function GetRfidStore(req, res) {
     try {
         const db = await connectDB();
-        const collection = db.collection('userdata');
+        const collection = db.collection('rfidStore');
 
-        const userdata = await collection.find({}).toArray();
+        const rfidStore = await collection.find({}).toArray();
 
-        if (userdata.length === 0) {
+        if (rfidStore.length === 0) {
             return res.status(404).json({ success: false, message: "Data Not Found" });
         } else {
-            return res.status(200).json({ success: true, userdataS: userdata });
+            return res.status(200).json({ success: true, RFID: rfidStore });
         }
 
     } catch (error) {
@@ -19,4 +19,4 @@ async function UserDataApi(req, res) {
     }
 }
 
-module.exports = { UserDataApi };
+module.exports = { GetRfidStore };
