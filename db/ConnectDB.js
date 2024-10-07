@@ -3,10 +3,7 @@ require('dotenv').config();
 
 async function connectDB() {
     const uri = process.env.MONGODB_URI;
-    const client = new MongoClient(uri, {
-        tls: true, 
-        ssl: true, 
-    });
+    const client = new MongoClient(uri);
 
     try {
         await client.connect();
